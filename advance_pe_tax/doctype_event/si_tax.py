@@ -3,6 +3,30 @@ from frappe.utils import flt
 from erpnext.accounts.general_ledger import make_gl_entries
 
 
+def calc_tax_after_advance(doc, method=None):
+    """
+    Calculates the total advance tax from linked Payment Entries and adjusts the Sales Invoice taxes.
+    """
+    advance_tax_total = 0
+
+    for advance in doc.advances:
+        if advance.reference_type == "Payment Entry":
+            tax_amount = (
+                frappe.db.get_value(
+                    "Payment Entry", advance.reference_name, "total_taxes_and_charges"
+                )
+                or 0
+            )
+            advance_tax_total += tax_amount
+
+    if not advance_tax_total:
+        return
+    if advance_tax_total < 0:
+        doc.custom_total_taxes = doc.total_taxes_and_charges + advance_tax_total
+    else:
+        doc.custom_total_taxes = doc.total_taxes_and_charges - advance_tax_total
+
+
 def apply_advance_tax_adjustment(doc, method=None):
 
     advance_tax_total = 0
@@ -144,7 +168,7 @@ def reverse_advance_tax_on_si_submit(doc, method):
 
 
 def cancel_reversed_advance_tax_on_si_cancel(doc, method):
- 
+
     frappe.db.sql(
         """
         UPDATE `tabGL Entry` 

@@ -9,6 +9,9 @@ app_license = "mit"
 # ------------------
 
 # required_apps = []
+fixtures = [
+    {"dt": "Custom Field", "filters": [["module", "=", "Advance Pe Tax"]]},
+]
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [
@@ -148,6 +151,7 @@ doc_events = {
     "Sales Invoice": {
         "on_submit": "advance_pe_tax.doctype_event.si_tax.reverse_advance_tax_on_si_submit",
         "on_cancel": "advance_pe_tax.doctype_event.si_tax.cancel_reversed_advance_tax_on_si_cancel",
+        "validate": "advance_pe_tax.doctype_event.si_tax.calc_tax_after_advance",
     }
 }
 
