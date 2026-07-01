@@ -18,9 +18,12 @@ def calc_tax_after_advance(doc, method=None):
                 or 0
             )
             advance_tax_total += tax_amount
+    frappe.msgprint(
+        f"Total Advance Tax from linked Payment Entries: {advance_tax_total}"
+    )
 
     if not advance_tax_total:
-        return
+        doc.custom_total_taxes = doc.total_taxes_and_charges
     if advance_tax_total < 0:
         doc.custom_total_taxes = doc.total_taxes_and_charges + advance_tax_total
     else:
