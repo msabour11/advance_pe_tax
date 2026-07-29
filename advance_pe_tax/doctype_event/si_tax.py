@@ -219,6 +219,15 @@ def reverse_advance_tax_on_si_submit(doc, method):
         if not tax_accounts:
             continue
 
+        deduction_account = None
+        for deduction in getattr(pe, "deductions", []) or []:
+            if deduction.account:
+                deduction_account = deduction.account
+                break
+
+        if not deduction_account:
+            deduction_account = pe.paid_from
+
         tax_gl = frappe.db.get_all(
             "GL Entry",
             filters={
@@ -266,7 +275,7 @@ def reverse_advance_tax_on_si_submit(doc, method):
             gl_entries.append(
                 doc.get_gl_dict(
                     {
-                        "account": pe.paid_from,
+                        "account": deduction_account,
                         "against": tax_row.account,
                         "debit": customer_debit,
                         "credit": customer_credit,
@@ -285,7 +294,7 @@ def reverse_advance_tax_on_si_submit(doc, method):
                 doc.get_gl_dict(
                     {
                         "account": tax_row.account,
-                        "against": pe.paid_from,
+                        "against": deduction_account,
                         "debit": tax_debit,
                         "credit": tax_credit,
                         "posting_date": posting_date,
