@@ -19,13 +19,14 @@ function fetch_payment_entry(frm, cdt, cdn) {
 
 			// 2. Calculate the Allocated VAT based on your formula
 			// (Added a safeguard to prevent division by zero errors if percentage is 0)
+			const allocated_amount = row.advance_amount * (row.custom_percentage / 100);
+
 			let allocated_vat = 0;
-			if (row.custom_percentage > 0) {
-				allocated_vat = advance_vat * (row.custom_percentage / 100);
+			if (row.custom_percentage > 0 && allocated_amount > 0) {
+				allocated_vat = allocated_amount * (15 / 100);
 			}
 
 			// 3. Calculate the Allocated Amount
-			const allocated_amount = row.advance_amount * (row.custom_percentage / 100);
 
 			// 4. Set all values simultaneously (this automatically refreshes the table row)
 			frappe.model.set_value(cdt, cdn, {
