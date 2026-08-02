@@ -9,18 +9,21 @@ def calc_tax_after_advance(doc, method=None):
     """
     advance_tax_total = 0
 
+    # for advance in doc.advances:
+    #     if advance.reference_type == "Payment Entry":
+    #         tax_amount = (
+    #             frappe.db.get_value(
+    #                 "Payment Entry", advance.reference_name, "total_taxes_and_charges"
+    #             )
+    #             or 0
+    #         )
+    #         advance_tax_total += tax_amount
+    # frappe.msgprint(
+    #     f"Total Advance Tax from linked Payment Entries: {advance_tax_total}"
+    # )
+
     for advance in doc.advances:
-        if advance.reference_type == "Payment Entry":
-            tax_amount = (
-                frappe.db.get_value(
-                    "Payment Entry", advance.reference_name, "total_taxes_and_charges"
-                )
-                or 0
-            )
-            advance_tax_total += tax_amount
-    frappe.msgprint(
-        f"Total Advance Tax from linked Payment Entries: {advance_tax_total}"
-    )
+        advance_tax_total += advance.custom_allocated_vat
 
     if not advance_tax_total:
         doc.custom_total_taxes = doc.total_taxes_and_charges
