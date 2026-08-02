@@ -23,7 +23,7 @@ function fetch_payment_entry(frm, cdt, cdn) {
 
 			let allocated_vat = 0;
 			if (row.custom_percentage > 0 && allocated_amount > 0) {
-				allocated_vat = allocated_amount * (15 / 100);
+				allocated_vat = (allocated_amount * (15 / 100)) / 1.15; // Assuming 15% VAT rate, adjust as necessary
 			}
 
 			// 3. Calculate the Allocated Amount

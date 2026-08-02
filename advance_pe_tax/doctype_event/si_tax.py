@@ -159,8 +159,8 @@ def reverse_advance_tax_on_si_submit(doc, method):
                         "posting_date": posting_date,
                         "against_voucher_type": "Sales Invoice",
                         "against_voucher": doc.name,
-                        "party_type": "Customer",
-                        "party": doc.customer,
+                        # "party_type": "Customer",
+                        # "party": doc.customer,
                         "cost_center": doc.cost_center or tax_row.cost_center,
                         "remarks": f"Reversal of advance tax with amount {tax_amount} from Payment Entry {pe.name} for Sales Invoice {doc.name}",
                     }
