@@ -152,9 +152,16 @@ doc_events = {
         "on_submit": "advance_pe_tax.doctype_event.si_tax.reverse_advance_tax_on_si_submit",
         "on_cancel": "advance_pe_tax.doctype_event.si_tax.cancel_reversed_advance_tax_on_si_cancel",
         "validate": "advance_pe_tax.doctype_event.si_tax.calc_tax_after_advance",
-    }
+    },
+    "Payment Entry": {
+        "on_submit": "advance_pe_tax.zatca.payment_entry.generate_zatca_qr",
+    },
 }
 
+
+jinja = {
+    "methods": ["advance_pe_tax.zatca.payment_entry.get_zatca_phase_1_qr_for_payment"]
+}
 # Scheduled Tasks
 # ---------------
 
